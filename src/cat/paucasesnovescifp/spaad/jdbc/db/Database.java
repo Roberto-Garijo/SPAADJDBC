@@ -15,9 +15,8 @@ public class Database {
     ArrayList<Nacionalitat> nacionalitats = new ArrayList<Nacionalitat>();
 
 
-
-    public Database() {}
-    public Database(String url) {
+    public Database() throws SQLException {}
+    public Database(String url) throws SQLException {
         this.url = url;
     }
 
@@ -142,6 +141,29 @@ public class Database {
         }
     }
 
+    public void setNacionalitatsAutorsTransaccio(ArrayList<Autor> autors,  Nacionalitat nacionalitat) throws SQLException {
+        try {
+            Connection con = DriverManager.getConnection(url);
+            String update;
+            int result = 0;
+
+            con.setAutoCommit(false);
+            Statement st = con.createStatement();
+            for (Autor a : autors) {
+                con.commit();
+                update = "INSERT INTO autors (ID_AUT, NOM_AUT, FK_NACIONALITAT)" +
+                        "VALUES ('" + a.getId() + "', '" + a.getNom_aut() + "', '" + nacionalitat.getNacionalitat() + "')";
+                result += st.executeUpdate(update);
+            }
+            System.out.println(result + " lineas afectadas");
+
+        } catch (SQLException jdbcException) {
+            jdbcException.getMessage();
+            jdbcException.getSQLState();
+            jdbcException.getErrorCode();
+        }
+    }
+
     public void llenguesWhere(String ll) {
         try {
             Connection con = DriverManager.getConnection(url);
@@ -160,7 +182,7 @@ public class Database {
         }
     }
 
-    public void preparedLlenguesWhere(String ll) throws SQLException {
+    public void preparedLlenguesWhere(String ll) {
         try {
             String consulta = "SELECT TITOL, FK_LLENGUA\n" +
                     "FROM llengues join llibres on llengues.LLENGUA = llibres.FK_LLENGUA\n" +
