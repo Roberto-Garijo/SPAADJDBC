@@ -1,19 +1,17 @@
 package cat.paucasesnovescifp.spaad.jdbc.info;
+import cat.paucasesnovescifp.spaad.jdbc.helpers.JDBCException;
 
 public class Nacionalitat {
     String nacionalitat;
 
     public Nacionalitat(String nacionalitat) {
-        this.nacionalitat = nacionalitat;
+        if (nacionalitat == null && !nacionalitat.isEmpty() && !nacionalitat.isBlank()) {
+            System.err.println("La nacionalitat no pot ser null");
+        } else
+            this.nacionalitat = nacionalitat;
     }
 
     public String getNacionalitat() {
-        if (nacionalitat == null) {
-            assert false;
-            if (nacionalitat.equals("")) {
-                nacionalitat = "Nacionalitat desconeguda";
-            }
-        }
         return nacionalitat;
     }
 
